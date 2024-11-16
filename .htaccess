@@ -1,4 +1,30 @@
-RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php/$1 [L]
+Header set Access-Control-Allow-Origin "*"
+
+
+<IfModule mod_rewrite.c>
+    #SetEnv CI_ENV production
+    Options +FollowSymLinks -Indexes
+    Options -MultiViews
+
+    RewriteEngine On
+    Header set Access-Control-Allow-Origin "*"
+
+
+    RewriteCond $1 !^(index\.php|resources|assets|robots\.txt)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^([\s\S]*)$ index.php?/$1 [L,NC,QSA]
+</IfModule>
+
+<Files ~ "\.inc$">
+Order Allow,Deny
+Deny from All
+</Files>
+
+<IfModule !mod_rewrite.c>
+        ErrorDocument 404 /index.php
+
+        <IfModule mod_headers.c>
+Header set Access-Control-Allow-Origin "*"
+</IfModule>
+</IfModule>
